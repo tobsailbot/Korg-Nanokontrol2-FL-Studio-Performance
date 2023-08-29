@@ -107,7 +107,7 @@ BracketedRange = False
 #	If set to True, the mixer tracks controlled by the nanoKONTROL will
 #	have brackets added to their names. False (Default) will leave the names untouched.
 
-PreserveMixDiff = False
+PreserveMixDiff = True
 #   If set to True, the faders of the selected tracks will stop when one of the faders
 #   reach +5.6dB. False (Default) means all the faders can be raised to +5.6dB.
 

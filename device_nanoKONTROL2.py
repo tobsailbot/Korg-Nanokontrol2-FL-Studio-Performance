@@ -55,14 +55,25 @@ def OnControlChange(event):
 					elif button in kn.smr('M'): muteTrack(track)
 					elif button in kn.smr('R'):
 						if config.ArmedTracks: armTrack(track)
-						elif config.MultiSelect: selectTrack(track) 
+						elif config.MultiSelect: selectTrack(track)
 						else: setTrackNumber(track)
 				elif mode == 1 and not kn.shift:
-					nr = selectedChannel()
-					ch_count = channelCount()
-
-					if button == 19: soloChannel(nr)
-					elif button == 20: muteChannel(nr)
+					smr_channels = kn.smr_channels
+					channel_group = {}
+					count = 0
+					for key, value in smr_channels.items():
+						if count < channelCount()*3:
+							channel_group[key] = value
+							count += 1
+						else:
+							break
+					try:
+						channel = channel_group[button]
+						if button in kn.smr('S'): soloChannel(channel)
+						elif button in kn.smr('M'): muteChannel(channel)
+						elif button in kn.smr('R'): selectChannel(channel)
+					except Exception:
+						pass
 				elif mode == 3 or kn.shift:
 					if kn.shift: kn.shiftevent = True
 					event.handled = False	# Pass the event to FL Studio
@@ -521,6 +532,8 @@ class Kontrol:
 	#	Initiates a lot of stuff
 		self.tracks = []
 		self.smr_tracks = {}
+		self.smr_channels = {19: 0, 20: 0, 21: 0, 22: 1, 23: 1, 24: 1, 25: 2, 26: 2, 27: 2, 28: 3, 29: 3, 30: 3,
+		     				 31: 4, 32: 4, 33: 4, 34: 5, 35: 5, 36: 5, 37: 6, 38: 6, 39: 6, 40: 7, 41: 7, 42: 7}
 		self.mixer_range = []
 		self.set_mixer_range(1)
 		self.repeat_events = {}		
@@ -1209,7 +1222,7 @@ class Kontrol:
 # ------- S M R ligths for channelrack -----------
 	def channel_status(self):
 	#	Sets the Solo/Mute lights to the status of the current channel
-		smr_channels = {19: 0, 20: 0, 21: 0, 22: 1, 23: 1, 24: 1, 25: 2, 26: 2, 27: 2, 28: 3, 29: 3, 30: 3, 31: 4, 32: 4, 33: 4, 34: 5, 35: 5, 36: 5, 37: 6, 38: 6, 39: 6, 40: 7, 41: 7, 42: 7}
+		smr_channels = self.smr_channels
 		channel_group = {}
 		count = 0
 

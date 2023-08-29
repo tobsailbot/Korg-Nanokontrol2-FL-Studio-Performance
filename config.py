@@ -27,7 +27,7 @@ ModeBlink = True
 #	True (Default) causes the transport-buttons to flash rapidly to indicate the
 #	active mode when Cycle is pressed. False disables the flashing effect.
 
-MixerMode = True
+MixerMode = False
 #	True (Default) enables the Mixer mode.
 #	False disables the Mixer mode.
 

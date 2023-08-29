@@ -1,0 +1,33 @@
+
+def smr(self,key):
+#	Generates a list of numbers that match the CC codes for the S, M or R buttons
+    SMR = 'SMR'
+    if key in SMR:
+        if key == SMR[0]: k = 1
+        elif key == SMR[1]: k = 2
+        elif key == SMR[2]: k = 3
+        else: raise ValueError("key argument must be one of the strings 'S', 'M' or 'R'")
+    r = [3 * x + k for x in range(6,14)]
+    return r
+
+
+def set_track_status(self):
+#	This is used to update the lights of the Solo, Mute and Record buttons
+    smr_tracks = self.smr_tracks
+    buttons = self.smr_btns
+    cc = MIDI_CONTROLCHANGE
+    chan = config.MIDIChannel - 1
+
+    for button in buttons:	# Clear all lights
+        midiOutMsg(cc,chan,button,0)
+
+    for button in buttons:	# Activate the buttons light if the corresponding mixer state is set
+        track = smr_tracks[button]
+        if button in self.smr('S'):
+            if isTrackSolo(track): midiOutMsg(cc,chan,button,127)
+        elif button in self.smr('M'):
+            if isTrackMuted(track): midiOutMsg(cc,chan,button,127)
+        elif button in self.smr('R'):
+            if config.ArmedTracks: sel_arm = isTrackArmed(track)
+            else: sel_arm = isTrackSelected(track)
+            if sel_arm: midiOutMsg(cc,chan,button,127)

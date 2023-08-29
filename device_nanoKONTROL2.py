@@ -59,6 +59,8 @@ def OnControlChange(event):
 						else: setTrackNumber(track)
 				elif mode == 1 and not kn.shift:
 					nr = selectedChannel()
+					ch_count = channelCount()
+
 					if button == 19: soloChannel(nr)
 					elif button == 20: muteChannel(nr)
 				elif mode == 3 or kn.shift:
@@ -1188,9 +1190,10 @@ class Kontrol:
 	def set_channel(self,button):
 	#	Navigates between channels using the marker buttons
 		markers = self.markers
-
+		
 		if button == markers[0]:	# marker set
 			channel = selectedChannel()
+			print(selectedChannel())
 			showEditor(channel)
 
 		if button == markers[1]:	# marker prev
@@ -1203,19 +1206,54 @@ class Kontrol:
 		name = getChannelName(nr)
 		setHintMsg(name)
 
-
+# ------- S M R ligths for channelrack -----------
 	def channel_status(self):
 	#	Sets the Solo/Mute lights to the status of the current channel
+		smr_tracks = {19: 1, 20: 1, 21: 1, 22: 2, 23: 2, 24: 2, 25: 3, 26: 3, 27: 3, 28: 4, 29: 4, 30: 4, 31: 5, 32: 5, 33: 5, 34: 6, 35: 6, 36: 6, 37: 7, 38: 7, 39: 7, 40: 8, 41: 8, 42: 8}
+		buttons = self.smr_btns
 		cc = MIDI_CONTROLCHANGE
 		smr_chan = config.MIDIChannel - 1
-		solo_light = 19
-		mute_light = 20
-		solo, mute = 0, 0
-		nr = selectedChannel()
-		if isChannelSolo(nr): solo = 127
-		if isChannelMuted(nr): mute = 127
-		midiOutMsg(cc,smr_chan,solo_light,solo)
-		midiOutMsg(cc,smr_chan,mute_light,mute)
+
+		for button in buttons:	# Clear all lights
+			midiOutMsg(cc,smr_chan,button,0)
+
+		solo1, mute1, rec1 = 0, 0, 0
+		solo2, mute2, rec2 = 0, 0, 0
+		solo3, mute3, rec3 = 0, 0, 0
+		# channel = selectedChannel()
+
+		# if isChannelSolo(0): solo1 = 127
+		# if isChannelMuted(0): mute1 = 127
+		# if isChannelSelected(0): rec1 = 127
+
+		# if isChannelSolo(1): solo2= 127
+		# if isChannelMuted(1): mute2 = 127
+		# if isChannelSelected(1): rec2 = 127
+
+		# if isChannelSolo(2): solo3= 127
+		# if isChannelMuted(2): mute3 = 127
+		# if isChannelSelected(2): rec3 = 127
+
+		# midiOutMsg(cc,smr_chan,19,solo1)
+		# midiOutMsg(cc,smr_chan,20,mute1)
+		# midiOutMsg(cc,smr_chan,21,rec1)
+
+		# midiOutMsg(cc,smr_chan,22,solo2)
+		# midiOutMsg(cc,smr_chan,23,mute2)
+		# midiOutMsg(cc,smr_chan,24,rec2)
+
+		# midiOutMsg(cc,smr_chan,25,solo3)
+		# midiOutMsg(cc,smr_chan,26,mute3)
+		# midiOutMsg(cc,smr_chan,27,rec3)
+
+		for button in buttons:	# Activate the buttons light if the corresponding mixer state is set
+			track = smr_tracks[button]
+			if button in self.smr('S'):
+				if isChannelSolo(track): midiOutMsg(cc,smr_chan,button,127)
+			elif button in self.smr('M'):
+				if isChannelMuted(track): midiOutMsg(cc,smr_chan,button,127)
+			elif button in self.smr('R'):
+				if isChannelSelected(track): midiOutMsg(cc,smr_chan,button,127)
 
 
 	def set_target_mixer(self,event):

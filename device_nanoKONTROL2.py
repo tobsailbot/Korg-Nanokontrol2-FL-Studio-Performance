@@ -71,7 +71,7 @@ def OnControlChange(event):
 						channel = channel_group[button]
 						if button in kn.smr('S'): soloChannel(channel)
 						elif button in kn.smr('M'): muteChannel(channel)
-						elif button in kn.smr('R'): selectChannel(channel)
+						elif button in kn.smr('R'): selectOneChannel(channel)
 					except Exception:
 						pass
 				elif mode == 3 or kn.shift:

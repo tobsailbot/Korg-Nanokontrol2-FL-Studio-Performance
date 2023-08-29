@@ -83,6 +83,7 @@ def OnControlChange(event):
 			if mode == 0 and not kn.shift:
 				if len(kn.selectedtracks) > 1: kn.multi_fader (event.data1,event.data2)
 				else: kn.volume_fader(event.data1,event.data2)
+			elif mode == 1 and not kn.shift: kn.volume_fader(event.data1,event.data2)
 			elif mode == 2 and not kn.shift: kn.playlist_zoom(event)
 			elif mode == 3 or kn.shift:
 				if kn.shift: kn.shiftevent = True
@@ -91,7 +92,7 @@ def OnControlChange(event):
 		elif button in knobs:	# Handle mixer knobs
 			if mode == 0 and not kn.shift: kn.func_knob(event.data1,event.data2)
 			elif mode == 0 and kn.shift and kn.control_not_linked(event.data1): kn.func_knob(event.data1,event.data2,False)
-			elif mode == 1 and not kn.shift: kn.set_target_mixer(event)
+			elif mode == 1 and not kn.shift: kn.tempo_knob(event)
 			elif mode == 2 and not kn.shift: kn.tempo_knob(event)
 			elif mode == 3 or kn.shift:
 				if kn.shift: kn.shiftevent = True
@@ -567,7 +568,7 @@ class Kontrol:
 		self.transp_btns = (6,7,8,9,10)			# Transport buttons cc codes
 		self.knobs = (11,12,13,14,15,16,17,18)		# Knobs cc codes
 		self.smr_btns = [i for i in range(19,43)]
-		self.faders = (43,44,45,46,47,48,49,50)	# Faders cc codes
+		self.faders = (43,44,45,46,47,48,49)	# Faders cc codes
 		self.volume_table = {1.0: (5.6,0.0036), 0.98: (5.0,0.0036), 0.943: (4.0,0.0035), 0.907: (3.0,0.0035), 0.87: (2.0,0.0035), 0.835: (1.0,0.0035),
 		0.8: (0.0,0.0035),0.765: (-1.0,0.0035), 0.732: (-2.0,0.0032), 0.6962: (-3.0,0.0032), 0.664: (-4.0,0.00316), 0.632: (-5.0,0.00325), 0.6: (-6.0,0.00319),
 		0.568: (-7.0,0.0031), 0.536: (-8.0,0.003), 0.506: (-9.0,0.00295), 0.476: (-10.0,0.0029), 0.447: (-11.0,0.00289), 0.418: (-12.0,0.0027),
@@ -1339,7 +1340,7 @@ class Kontrol:
 		base = config.TempoBase - 2
 		catch = 2
 
-		if knob == self.knobs[0]:
+		if knob == self.knobs[-1]:
 			t = knobval - lastknob
 			pos = base + knobval - tempo
 			if t < 0 and pos < -1: catch = 4

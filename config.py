@@ -113,6 +113,6 @@ PreserveMixDiff = False
 
 # Playlist settings
 
-TempoBase = 80
+TempoBase = 60
 #	This sets the min (bottom)-value of the tempo-knob in the Playlist control mode.
 #	The value can be between 10 and 397.

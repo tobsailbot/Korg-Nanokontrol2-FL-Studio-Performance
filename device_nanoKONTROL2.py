@@ -1209,7 +1209,17 @@ class Kontrol:
 # ------- S M R ligths for channelrack -----------
 	def channel_status(self):
 	#	Sets the Solo/Mute lights to the status of the current channel
-		smr_tracks = {19: 1, 20: 1, 21: 1, 22: 2, 23: 2, 24: 2, 25: 3, 26: 3, 27: 3, 28: 4, 29: 4, 30: 4, 31: 5, 32: 5, 33: 5, 34: 6, 35: 6, 36: 6, 37: 7, 38: 7, 39: 7, 40: 8, 41: 8, 42: 8}
+		smr_channels = {19: 0, 20: 0, 21: 0, 22: 1, 23: 1, 24: 1, 25: 2, 26: 2, 27: 2, 28: 3, 29: 3, 30: 3, 31: 4, 32: 4, 33: 4, 34: 5, 35: 5, 36: 5, 37: 6, 38: 6, 39: 6, 40: 7, 41: 7, 42: 7}
+		channel_group = {}
+		count = 0
+
+		for key, value in smr_channels.items():
+			if count < channelCount()*3:
+				channel_group[key] = value
+				count += 1
+			else:
+				break
+
 		buttons = self.smr_btns
 		cc = MIDI_CONTROLCHANGE
 		smr_chan = config.MIDIChannel - 1
@@ -1217,44 +1227,17 @@ class Kontrol:
 		for button in buttons:	# Clear all lights
 			midiOutMsg(cc,smr_chan,button,0)
 
-		solo1, mute1, rec1 = 0, 0, 0
-		solo2, mute2, rec2 = 0, 0, 0
-		solo3, mute3, rec3 = 0, 0, 0
-		# channel = selectedChannel()
-
-		# if isChannelSolo(0): solo1 = 127
-		# if isChannelMuted(0): mute1 = 127
-		# if isChannelSelected(0): rec1 = 127
-
-		# if isChannelSolo(1): solo2= 127
-		# if isChannelMuted(1): mute2 = 127
-		# if isChannelSelected(1): rec2 = 127
-
-		# if isChannelSolo(2): solo3= 127
-		# if isChannelMuted(2): mute3 = 127
-		# if isChannelSelected(2): rec3 = 127
-
-		# midiOutMsg(cc,smr_chan,19,solo1)
-		# midiOutMsg(cc,smr_chan,20,mute1)
-		# midiOutMsg(cc,smr_chan,21,rec1)
-
-		# midiOutMsg(cc,smr_chan,22,solo2)
-		# midiOutMsg(cc,smr_chan,23,mute2)
-		# midiOutMsg(cc,smr_chan,24,rec2)
-
-		# midiOutMsg(cc,smr_chan,25,solo3)
-		# midiOutMsg(cc,smr_chan,26,mute3)
-		# midiOutMsg(cc,smr_chan,27,rec3)
-
 		for button in buttons:	# Activate the buttons light if the corresponding mixer state is set
-			track = smr_tracks[button]
-			if button in self.smr('S'):
-				if isChannelSolo(track): midiOutMsg(cc,smr_chan,button,127)
-			elif button in self.smr('M'):
-				if isChannelMuted(track): midiOutMsg(cc,smr_chan,button,127)
-			elif button in self.smr('R'):
-				if isChannelSelected(track): midiOutMsg(cc,smr_chan,button,127)
-
+			try:
+				track = channel_group[button]
+				if button in self.smr('S'):
+					if isChannelSolo(track): midiOutMsg(cc,smr_chan,button,127)
+				elif button in self.smr('M'):
+					if isChannelMuted(track): midiOutMsg(cc,smr_chan,button,127)
+				elif button in self.smr('R'):
+					if isChannelSelected(track): midiOutMsg(cc,smr_chan,button,127)
+			except:
+				break
 
 	def set_target_mixer(self,event):
 	#	Changes the target mixer track for the current channel

@@ -628,7 +628,7 @@ class Kontrol:
 		mixer_range = self.mixer_range
 		n = faderlist.index(fader)
 		track = mixer_range[n]
-		volume = val / 127 - 0.003
+		volume = val / 158 - 0.003
 		if volume < 0.01: volume = 0
 		elif volume > 0.99: volume = 1
 		if self.pickup: setTrackVolume(track,volume,2)

@@ -30,7 +30,7 @@ def OnDeInit():
 
 
 def OnControlChange(event):
-	event.handled = True 					# Set the event as handled for now so it does not get sent to FL Studio unless we want it to
+	event.handled = False 					# Set the event as handled for now so it does not get sent to FL Studio unless we want it to
 	button = event.data1
 	mixer_range = kn.mixer_range
 	master = config.StickyMaster

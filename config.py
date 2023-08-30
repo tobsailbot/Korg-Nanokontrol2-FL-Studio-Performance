@@ -39,7 +39,7 @@ PlaylistMode = False
 #	True (Default) enables the Playlist mode.
 #	False disables the Playlist mode.
 
-ControllerLinkMode = False
+ControllerLinkMode = True
 #   True enables the Controller Link mode.
 #   False (Default) disables the Controller Link mode.
 
